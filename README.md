@@ -1,4 +1,4 @@
-﻿PLEASE PRESS ENTER AFTER WRITE YOUR DESIRED AMOUNT OTHERWISE THE SCRIPT WILL NOT WORK!!! 
+﻿##PLEASE PRESS ENTER AFTER WRITE YOUR DESIRED AMOUNT OTHERWISE THE SCRIPT WILL NOT WORK!!! 
 
 ![bank-script-example](https://raw.githubusercontent.com/eriickz/df1-amount-prettier/main/bank-script-example.png)
 
