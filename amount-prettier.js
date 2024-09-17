@@ -180,7 +180,7 @@
     return observer
   }
 
-  function main() {
+  function init() {
     const bankContainerElement = $(`#${bankContainerId}`)
     const marketplaceContainer = $("#inventoryHolder")
 
@@ -200,5 +200,5 @@
     }
   }
 
-  main()
+  init()
 })();
