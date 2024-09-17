@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Dead Frontier - Amount Prettier
 // @namespace   Dead Frontier - TheKiing
-// @version     1.0.1
+// @version     1.0.2
 // @author      TheKiing
 // @match       *://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=15
 // @match       *://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=35
@@ -11,10 +11,14 @@
 // ==/UserScript==
 
 // BUG: After entering a desired amount and clicking the "Yes" button, the amount is incorrectly changed to 1% of the value that was originally typed.
+// BUG: Input cursor is moved to the start when typing but if you remove the zero that is placed automatically it don't do it.  
 
 // CHANGELOG
+// --------------------------------------------
 // 1.0.1 - September 17, 2024
-// - Fix: Bank actions buttons lookup on marketplace page (line 159)
+// - Fix: Bank actions buttons lookup on marketplace page (line 168)
+// 1.0.2 - September 17, 2024
+// - Fix: Prettier input isn't visible in the loading prompt when searching items or changing tabs on marketplace page.
 
 (function() {
   "use strict";
@@ -205,7 +209,9 @@
       const marketplaceObserver = loadMarketplaceInputsObserver()
       const observerTarget = $(`#${marketplacePromptContainerId}`)[0]
 
-      marketplaceObserver.observe(observerTarget, { childList: true, subtree: true })
+      if (marketplaceContainer.html().indexOf("Loading") === -1) {
+        marketplaceObserver.observe(observerTarget, { childList: true, subtree: true })
+      }
     }
   }
 
