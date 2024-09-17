@@ -10,6 +10,12 @@
 // @license     MIT
 // ==/UserScript==
 
+// BUG: After entering a desired amount and clicking the "Yes" button, the amount is incorrectly changed to 1% of the value that was originally typed.
+
+// CHANGELOG
+// 1.0.1 - September 17, 2024
+// - Fix: Bank actions buttons lookup on marketplace page (line 159)
+
 (function() {
   "use strict";
 
@@ -153,8 +159,11 @@
     })
 
     const bankActionBtns = $(`#${bankContainerId} button[class="opElem"]`)
-    bankActionBtns[0].style.top = bankActionBtnsTopPosition 
-    bankActionBtns[1].style.top = bankActionBtnsTopPosition 
+    
+    if (bankActionBtns[0] !== undefined & bankActionBtns[1] !== undefined) {
+      bankActionBtns[0].style.top = bankActionBtnsTopPosition 
+      bankActionBtns[1].style.top = bankActionBtnsTopPosition
+    }
   }
 
   function loadMarketplaceInputsObserver() {
@@ -189,7 +198,7 @@
       $("#dBtn").hide()
       $("#wBtn").hide()
 
-      loadBankInputs()  
+      loadBankInputs()
     }
 
     if (marketplaceContainer !== undefined) {
