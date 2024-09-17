@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Dead Frontier - Amount Prettier
 // @namespace   Dead Frontier - TheKiing
-// @version     0.1.0
+// @version     1.0.0
 // @author      TheKiing
 // @match       *://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=15
 // @match       *://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=35
