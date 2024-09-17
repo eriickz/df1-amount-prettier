@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Dead Frontier - Amount Prettier
 // @namespace   Dead Frontier - TheKiing
-// @version     1.0.2
+// @version     1.0.3
 // @author      TheKiing
 // @match       *://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=15
 // @match       *://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=35
@@ -19,6 +19,9 @@
 // - Fix: Bank actions buttons lookup on marketplace page (line 168)
 // 1.0.2 - September 17, 2024
 // - Fix: Prettier input isn't visible in the loading prompt when searching items or changing tabs on marketplace page.
+// 1.0.3 - September 17, 2024
+// - Fix: Prettier input not working properly on marketplace page after version 1.0.2
+// - Fix: Free items offers not working. 
 
 (function() {
   "use strict";
@@ -52,6 +55,10 @@
   }
 
   function removeCommasFromAmount(amount) {
+    if (amount === 0) {
+      return "0"
+    }
+
     return amount.replace(",", "")
   }
 
@@ -65,6 +72,7 @@
     isDataTypePrice,
     onInputChange,
     onEnterKeyPress, 
+    onInputCreated,
   }) {
     let prettierInputElement = undefined 
     let prettierInputValue = 0
@@ -88,7 +96,9 @@
     }
 
     if (prettierInputElement !== undefined) {
-      prettierInputElement.val(0)
+      if (onInputCreated !== undefined) {
+        onInputCreated(prettierInputElement)
+      }
 
       prettierInputElement.keyup(function(event) {
         if (event.which >= 37 && event.which <= 40) return
@@ -175,17 +185,20 @@
       mutations.forEach(function(mutation) {
         const firstAddedNode = mutation.addedNodes.item(0)
 
-        if (firstAddedNode?.nodeName === "DIV") {
-          createAmountPrettierInputEvent({
-            promptInputContainerId: firstAddedNode,
-            classes: marketplaceInputClass,
-            haveMaxValue: true,
-            isDataTypePrice: true,
-            onEnterKeyPress: () => prompt.querySelector("button").click(),
-            onInputChange: () => {
-              $(firstAddedNode).parent().children().removeAttr("disabled")
-            }
-          })
+        if ($("#prompt").text().indexOf("How much would you like to sell") > -1) {
+          if (firstAddedNode?.nodeName === "DIV") {
+            createAmountPrettierInputEvent({
+              promptInputContainerId: firstAddedNode,
+              classes: marketplaceInputClass,
+              haveMaxValue: true,
+              isDataTypePrice: true,
+              onEnterKeyPress: () => prompt.querySelector("button").click(),
+              onInputCreated: (input) => {
+                input.val(0).focus()
+                $(firstAddedNode).parent().children().removeAttr("disabled")
+              },
+            })
+          }
         }
       })
     }) 
@@ -209,9 +222,7 @@
       const marketplaceObserver = loadMarketplaceInputsObserver()
       const observerTarget = $(`#${marketplacePromptContainerId}`)[0]
 
-      if (marketplaceContainer.html().indexOf("Loading") === -1) {
-        marketplaceObserver.observe(observerTarget, { childList: true, subtree: true })
-      }
+      marketplaceObserver.observe(observerTarget, { childList: true, subtree: true })
     }
   }
 
